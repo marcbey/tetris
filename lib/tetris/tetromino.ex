@@ -1,6 +1,8 @@
 defmodule Tetris.Tetromino do
   defstruct shape: :l, rotation: 0, location: {5, 1}
+
   alias Tetris.Point
+
   def new(options \\ []) do
     __struct__(options)
   end
@@ -22,14 +24,14 @@ defmodule Tetris.Tetromino do
   end
 
   def rotate(tetro) do
-    %{tetro | rotation: reotate_degrees(tetro.rotation)}
+    %{tetro | rotation: rotate_degrees(tetro.rotation)}
   end
 
-  defp reotate_degrees(270) do
+  defp rotate_degrees(270) do
     0
   end
 
-  defp reotate_degrees(n) do
+  defp rotate_degrees(n) do
     n + 90
   end
 
