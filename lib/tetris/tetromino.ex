@@ -27,6 +27,10 @@ defmodule Tetris.Tetromino do
     %{tetro | rotation: rotate_degrees(tetro.rotation)}
   end
 
+  def points(tetro) do
+    [tetro.location]
+  end
+
   defp rotate_degrees(270) do
     0
   end

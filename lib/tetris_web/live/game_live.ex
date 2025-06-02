@@ -5,35 +5,60 @@ defmodule TetrisWeb.GameLive do
   @impl true
   def mount(_params, _session, socket) do
     :timer.send_interval(500, :tick)
-    {:ok, socket |> new_tetromino}
+    {:ok, socket |> new_tetromino |> show_points()}
+  end
+
+  @impl true
+  def handle_info(:tick, socket) do
+    {:noreply, socket |> down |> show_points}
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <% {x, y} = @tetro.location %>
+    <% [{x, y}] = @points %>
       <section class="phx-hero">
+        <h>Welcome to Tetris!</h>
+        <%= render_board(assigns) %>
         <pre>
-          shape: <%= inspect @tetro.shape %>
-          rotation: <%= inspect @tetro.rotation %>
-          location: <%= "{" %> <%= x %>, <%= y %> <%= "}" %>
+          <%= "{" %> <%= x %>, <%= y %> <%= "}" %>
         </pre>
       </section>
     """
   end
 
-  @impl true
-  def handle_info(:tick, socket) do
-    {:noreply, down(socket)}
+  def down(%{assigns: %{tetro: %{location: {_, 20}}}} = socket) do
+    socket |> new_tetromino |> show_points
   end
 
-  def new_tetromino(socket) do
+
+  def down(%{assigns: %{tetro: tetro}} = socket) do
+    assign(socket, tetro: Tetromino.down(tetro))
+  end
+
+  defp render_board(assigns) do
+    ~H"""
+    <svg width="200" height="400">
+      <rect width="200" height="400" fill="black" />
+      <%= render_points(assigns) %>
+    </svg>
+    """
+  end
+
+  defp render_points(assigns) do
+    ~H"""
+    <%= for {x,y} <- @points do %>
+      <rect width="20" height="20" x={(x - 1) * 20} y={(y - 1) * 20} fill="white" />
+    <% end %>
+    """
+  end
+
+  defp new_tetromino(socket) do
     tetro = Tetromino.new_random()
     assign(socket, tetro: tetro)
   end
 
-  def down(%Phoenix.LiveView.Socket{assigns: %{tetro: tetro}} = socket) do
-    assign(socket, tetro: Tetromino.down(tetro))
+  defp show_points(socket) do
+    assign(socket, points: Tetromino.points(socket.assigns.tetro))
   end
-
 end
