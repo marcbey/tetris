@@ -22,6 +22,7 @@ defmodule TetrisWeb.GameLive do
         <%= render_board(assigns) %>
         <pre>
           <%= "{" %> <%= x %>, <%= y %> <%= "}" %>
+          <%= inspect(@tetro) %>
         </pre>
       </section>
     """
@@ -47,11 +48,20 @@ defmodule TetrisWeb.GameLive do
 
   defp render_points(assigns) do
     ~H"""
-    <%= for {x, y} <- @points do %>
-      <rect width="20" height="20" x={(x - 1) * 20} y={(y - 1) * 20} fill="white" />
+    <%= for {x, y, shape} <- @points do %>
+      <rect width="20" height="20" x={(x - 1) * 20} y={(y - 1) * 20} fill={color(shape)} />
     <% end %>
     """
   end
+
+  defp color(:l), do: "blue"
+  defp color(:j), do: "orange"
+  defp color(:s), do: "yellow"
+  defp color(:z), do: "green"
+  defp color(:o), do: "red"
+  defp color(:i), do: "limegreen"
+  defp color(:t), do: "magenta"
+  defp color(_),  do: "olive"
 
   defp new_tetromino(socket) do
     tetro = Tetromino.new_random()
