@@ -30,6 +30,7 @@ defmodule Tetris.Tetromino do
   def show(tetro) do
     tetro
     |> points
+    |> Points.rotate(tetro.rotation)
     |> Points.move(tetro.location)
     |> Points.add_shape(tetro.shape)
   end
@@ -52,8 +53,8 @@ defmodule Tetris.Tetromino do
 
   def points(%{shape: :o} = _tetro) do
     [
-      {2, 1}, {2, 2},
-      {2, 3}, {3, 3},
+      {2, 2}, {2, 3},
+      {3, 2}, {3, 3},
     ]
   end
 
@@ -96,7 +97,6 @@ defmodule Tetris.Tetromino do
   end
 
   defp random_shape do
-    # Enum.random([:l, :j, :o, :s, :z, :t, :i])
     ~w(l j o s z t i)a |> Enum.random()
   end
 end
