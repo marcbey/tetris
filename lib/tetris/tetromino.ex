@@ -1,7 +1,7 @@
 defmodule Tetris.Tetromino do
-  defstruct shape: :l, rotation: 0, location: {5, 1}
+  defstruct shape: :l, rotation: 0, location: {3, 1}
 
-  alias Tetris.Point
+  alias Tetris.{Point, Points}
 
   def new(options \\ []) do
     __struct__(options)
@@ -27,8 +27,61 @@ defmodule Tetris.Tetromino do
     %{tetro | rotation: rotate_degrees(tetro.rotation)}
   end
 
-  def points(tetro) do
-    [tetro.location]
+  def show(tetro) do
+    tetro |> points |> Points.move(tetro.location)
+  end
+
+  def points(%{shape: :l} = _tetro) do
+    [
+      {2, 1},
+      {2, 2},
+      {2, 3}, {3, 3}
+    ]
+  end
+
+  def points(%{shape: :j} = _tetro) do
+    [
+              {3, 1},
+              {3, 2},
+      {2, 3}, {3, 3}
+    ]
+  end
+
+  def points(%{shape: :o} = _tetro) do
+    [
+      {2, 1}, {2, 2},
+      {2, 3}, {3, 3},
+    ]
+  end
+
+  def points(%{shape: :s} = _tetro) do
+    [
+              {2, 2}, {3, 2},
+      {1, 3}, {2, 3},
+    ]
+  end
+
+  def points(%{shape: :z} = _tetro) do
+    [
+      {1, 2}, {2, 2},
+              {2, 3}, {3, 3},
+    ]
+  end
+
+ def points(%{shape: :t} = _tetro) do
+    [
+      {1, 2}, {2, 2}, {3, 2},
+              {2, 3},
+    ]
+  end
+
+  def points(%{shape: :i} = _tetro) do
+    [
+      {2, 1},
+      {2, 2},
+      {2, 3},
+      {2, 4}
+    ]
   end
 
   defp rotate_degrees(270) do

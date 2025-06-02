@@ -5,7 +5,7 @@ defmodule TetrisWeb.GameLive do
   @impl true
   def mount(_params, _session, socket) do
     :timer.send_interval(500, :tick)
-    {:ok, socket |> new_tetromino |> show_points()}
+    {:ok, socket |> new_tetromino |> show_points}
   end
 
   @impl true
@@ -16,7 +16,7 @@ defmodule TetrisWeb.GameLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <% [{x, y}] = @points %>
+    <% {x, y} = @tetro.location %>
       <section class="phx-hero">
         <h>Welcome to Tetris!</h>
         <%= render_board(assigns) %>
@@ -47,7 +47,7 @@ defmodule TetrisWeb.GameLive do
 
   defp render_points(assigns) do
     ~H"""
-    <%= for {x,y} <- @points do %>
+    <%= for {x, y} <- @points do %>
       <rect width="20" height="20" x={(x - 1) * 20} y={(y - 1) * 20} fill="white" />
     <% end %>
     """
@@ -59,6 +59,6 @@ defmodule TetrisWeb.GameLive do
   end
 
   defp show_points(socket) do
-    assign(socket, points: Tetromino.points(socket.assigns.tetro))
+    assign(socket, points: Tetromino.show(socket.assigns.tetro))
   end
 end
