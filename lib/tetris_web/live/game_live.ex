@@ -10,7 +10,7 @@ defmodule TetrisWeb.GameLive do
 
   @impl true
   def handle_info(:tick, socket) do
-    {:noreply, socket |> down |> rotate |> show_points}
+    {:noreply, socket |> down |> show_points}
   end
 
   @impl true
@@ -18,12 +18,14 @@ defmodule TetrisWeb.GameLive do
     ~H"""
     <% {x, y} = @tetro.location %>
       <section class="phx-hero">
-        <h>Welcome to Tetris!</h>
-        <%= render_board(assigns) %>
-        <pre>
-          <%= "{" %> <%= x %>, <%= y %> <%= "}" %>
-          <%= inspect(@tetro) %>
-        </pre>
+        <div phx-window-keydown="keystroke">
+          <h>Welcome to Tetris!</h>
+          <%= render_board(assigns) %>
+          <pre>
+            <%= "{" %> <%= x %>, <%= y %> <%= "}" %>
+            <%= inspect(@tetro) %>
+          </pre>
+        </div>
       </section>
     """
   end
@@ -41,6 +43,15 @@ defmodule TetrisWeb.GameLive do
   def rotate(%{assigns: %{tetro: tetro}} = socket) do
     assign(socket, tetro: Tetromino.rotate(tetro))
   end
+
+  def left(%{assigns: %{tetro: tetro}} = socket) do
+    assign(socket, tetro: Tetromino.left(tetro))
+  end
+
+  def right(%{assigns: %{tetro: tetro}} = socket) do
+    assign(socket, tetro: Tetromino.right(tetro))
+  end
+
 
   defp render_board(assigns) do
     ~H"""
@@ -76,4 +87,22 @@ defmodule TetrisWeb.GameLive do
   defp show_points(socket) do
     assign(socket, points: Tetromino.show(socket.assigns.tetro))
   end
+
+  @impl true
+  def handle_event("keystroke", %{"key" => " "}, socket) do
+    {:noreply, socket |> rotate |> show_points}
+  end
+
+  def handle_event("keystroke", %{"key" => "ArrowLeft"}, socket) do
+    {:noreply, socket |> left |> show_points}
+  end
+
+  def handle_event("keystroke", %{"key" => "ArrowRight"}, socket) do
+    {:noreply, socket |> right |> show_points}
+  end
+
+    def handle_event("keystroke", _, socket) do
+    {:noreply, socket |> show_points}
+  end
+
 end
