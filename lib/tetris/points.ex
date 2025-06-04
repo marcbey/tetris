@@ -1,12 +1,14 @@
 defmodule Tetris.Points do
   alias Tetris.Point
 
-  def move(points , change) do
-    points |> Enum.map(fn point -> Point.move(point, change) end)
+  def move(points, change) do
+    points
+    |> Enum.map(fn point -> Point.move(point, change) end)
   end
 
   def add_shape(points, shape) do
-    points |> Enum.map(fn point -> Point.add_shape(point, shape) end)
+    points
+    |> Enum.map(fn point -> Point.add_shape(point, shape) end)
   end
 
   def rotate(points, degrees) do
@@ -15,7 +17,6 @@ defmodule Tetris.Points do
   end
 
   def valid?(points) do
-    IO.inspect(points, label: "Checking validity for points")
     Enum.all?(points, &Point.in_bounds?/1)
   end
 end

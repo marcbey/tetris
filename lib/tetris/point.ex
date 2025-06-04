@@ -1,35 +1,22 @@
 defmodule Tetris.Point do
-  def origin do
+  def origin() do
     {0, 0}
   end
 
   def left({x, y}) do
-    {x - 1, y}
+    {x-1, y}
   end
 
   def right({x, y}) do
-    {x + 1, y}
+    {x+1, y}
   end
 
   def down({x, y}) do
-    {x, y + 1}
+    {x, y+1}
   end
 
-  @spec move({number(), number()}, {number(), number()}) :: {number(), number()}
   def move({x, y}, {change_x, change_y}) do
-    {x  + change_x, y + change_y}
-  end
-
-  def add_shape({x, y}, shape) do
-    {x, y, shape}
-  end
-
-  # def add_shape(point_with_shape, _shape) do
-  #   point_with_shape
-  # end
-
-  def add_shape({x, y}, shape) do
-    {x, y, shape}
+    {x + change_x, y + change_y}
   end
 
   def transpose({x, y}) do
@@ -41,7 +28,7 @@ defmodule Tetris.Point do
   end
 
   def flip({x, y}) do
-    {x, 5 - y}
+    {x, 5-y}
   end
 
   def rotate(point, 0) do
@@ -66,8 +53,17 @@ defmodule Tetris.Point do
     |> transpose
   end
 
+  def add_shape({x, y}, shape) do
+    {x, y, shape}
+  end
+  def add_shape(point_with_shape, _shape) do
+    point_with_shape
+  end
+
   def in_bounds?({x, y, _c}), do: in_bounds?({x, y})
   def in_bounds?({x, _y}) when x < 1, do: false
   def in_bounds?({x, _y}) when x > 10, do: false
+  def in_bounds?({_x, y}) when y > 20, do: false
   def in_bounds?(_point), do: true
+
 end
