@@ -61,13 +61,12 @@ defmodule Tetris.Point do
     point_with_shape
   end
 
-  @spec valid?(any(), any()) :: boolean()
   def valid?(point, junkyard) do
     in_bounds?(point) and !collide?(point, junkyard)
   end
 
   def collide?({x, y, _c}, junkyard), do: collide?({x, y}, junkyard)
-  def collide?(point, junkyard ), do: !!junkyard[point]
+  def collide?(point, junkyard), do: !!junkyard[point]
 
   def in_bounds?({x, y, _c}), do: in_bounds?({x, y})
   def in_bounds?({x, _y}) when x < 1, do: false

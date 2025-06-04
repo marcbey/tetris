@@ -18,6 +18,7 @@ defmodule TetrisWeb.GameLive do
     <section class="phx-hero">
       <div phx-window-keydown="keystroke">
       <h1>Welcome to Tetris</h1>
+      <h2>Your score is <%= @game.score %></h2>
       <%= render_board(assigns) %>
       <pre>
         <%= inspect @game %>
