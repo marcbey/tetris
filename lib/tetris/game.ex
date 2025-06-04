@@ -24,7 +24,7 @@ defmodule Tetris.Game do
     valid =
       new
       |> Tetromino.show
-      |> Points.valid?
+      |> Points.valid?(game.junkyard)
 
     {old, new, valid}
   end
