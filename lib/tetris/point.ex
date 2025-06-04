@@ -4,15 +4,16 @@ defmodule Tetris.Point do
   end
 
   def left({x, y}) do
-    {x-1, y}
+    {x - 1, y}
   end
 
+  @spec right({number(), any()}) :: {number(), any()}
   def right({x, y}) do
-    {x+1, y}
+    {x + 1, y}
   end
 
   def down({x, y}) do
-    {x, y+1}
+    {x, y + 1}
   end
 
   def move({x, y}, {change_x, change_y}) do
@@ -24,11 +25,11 @@ defmodule Tetris.Point do
   end
 
   def mirror({x, y}) do
-    {5-x, y}
+    {5 - x, y}
   end
 
   def flip({x, y}) do
-    {x, 5-y}
+    {x, 5 - y}
   end
 
   def rotate(point, 0) do
