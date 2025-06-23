@@ -59,6 +59,9 @@ defmodule Tetris.Game do
     %{game| junkyard: new_junkyard}
   end
 
+  def collapse do
+  end
+
   def junkyard_points(game) do
     game.junkyard
     |> Enum.map(fn {{x, y}, shape} -> {x, y, shape} end)
