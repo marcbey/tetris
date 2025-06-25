@@ -3,11 +3,12 @@ defmodule TetrisWeb.GameLive.Playing do
   alias Tetris.Game
 
   @rotate_keys ["ArrowUp", " "]
-
+  @tick_rate 200
+  @tick_rate_fast 20
 
   def mount(_params, _session, socket) do
     if connected?(socket) do
-      :timer.send_interval(200, :tick)
+      Process.send_after(self(), :tick, @tick_rate)
     end
 
     {:ok, new_game(socket)}
@@ -46,7 +47,7 @@ defmodule TetrisWeb.GameLive.Playing do
   defp color(_), do: "red"
 
   defp new_game(socket) do
-    assign(socket, game: Game.new())
+    assign(socket, game: Game.new(), tick_rate: 200)
   end
 
   def rotate(%{assigns: %{game: game}} = socket) do
@@ -72,22 +73,38 @@ defmodule TetrisWeb.GameLive.Playing do
   def maybe_end_game(socket), do: socket
 
   def handle_info(:tick, socket) do
-    {:noreply, socket |> down |> maybe_end_game}
+    socket = socket |> down |> maybe_end_game
+    Process.send_after(self(), :tick, socket.assigns.tick_rate)
+    {:noreply, socket}
   end
 
-  def handle_event("keystroke", %{"key" => key}, socket) when key in @rotate_keys do
+  def handle_event("keydown", %{"key" => key}, socket) when key in @rotate_keys do
     {:noreply, socket |> rotate}
   end
 
-  def handle_event("keystroke", %{"key" => "ArrowRight"}, socket) do
+  def handle_event("keydown", %{"key" => "ArrowRight"}, socket) do
     {:noreply, socket |> right}
   end
 
-  def handle_event("keystroke", %{"key" => "ArrowLeft"}, socket) do
+  def handle_event("keydown", %{"key" => "ArrowLeft"}, socket) do
+    IO.inspect socket
     {:noreply, socket |> left}
   end
 
-  def handle_event("keystroke", %{"key" => _}, socket) do
+  def handle_event("keydown", %{"key" => "ArrowDown"}, socket) do
+    {:noreply, assign(socket, tick_rate: @tick_rate_fast)}
+  end
+
+  def handle_event("keyup", %{"key" => "ArrowDown"}, socket) do
+    {:noreply, assign(socket, tick_rate: @tick_rate)}
+  end
+
+  def handle_event("keydown", %{"key" => _}, socket) do
     {:noreply, socket}
   end
+
+  def handle_event("keyup", %{"key" => _}, socket) do
+    {:noreply, socket}
+  end
+
 end
