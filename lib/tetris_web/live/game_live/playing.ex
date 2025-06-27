@@ -117,6 +117,14 @@ defmodule TetrisWeb.GameLive.Playing do
     {:noreply, assign(socket, tick_rate: @tick_rate)}
   end
 
+  def handle_event("keydown", %{"key" => "a"}, socket) do
+    {:noreply, assign(socket, tick_rate: 2000)}
+  end
+
+  def handle_event("keyup", %{"key" => "a"}, socket) do
+    {:noreply, assign(socket, tick_rate: @tick_rate)}
+  end
+
   def handle_event("keydown", %{"key" => _}, socket) do
     {:noreply, socket}
   end
@@ -124,5 +132,4 @@ defmodule TetrisWeb.GameLive.Playing do
   def handle_event("keyup", %{"key" => _}, socket) do
     {:noreply, socket}
   end
-
 end
