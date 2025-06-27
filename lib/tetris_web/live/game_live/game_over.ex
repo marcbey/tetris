@@ -11,5 +11,4 @@ defmodule TetrisWeb.GameLive.GameOver do
   def handle_event("play", _, socket) do
     {:noreply, push_navigate(socket, to: "/game/playing")}
   end
-
 end
