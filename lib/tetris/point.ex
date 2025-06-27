@@ -7,7 +7,6 @@ defmodule Tetris.Point do
     {x - 1, y}
   end
 
-  @spec right({number(), any()}) :: {number(), any()}
   def right({x, y}) do
     {x + 1, y}
   end

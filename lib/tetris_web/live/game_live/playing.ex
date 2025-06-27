@@ -16,8 +16,14 @@ defmodule TetrisWeb.GameLive.Playing do
 
   defp render_board(assigns) do
     ~H"""
-    <svg width="200" height="400">
-      <rect width="200" height="400" style="fill:rgb(0,0,0);" />
+    <svg width="204" height="404" style="background:#222; border:1px solid #444;">
+      <defs>
+        <linearGradient id="block-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <rect width="200" height="400" x="1" y="1" fill="none" />
       <%= render_points(assigns) %>
     </svg>
     """
@@ -26,25 +32,37 @@ defmodule TetrisWeb.GameLive.Playing do
   defp render_points(assigns) do
     ~H"""
     <%= for {x, y, shape} <- @game.points ++ Game.junkyard_points(@game) do %>
-      <rect
-        width="20"
-        height="20"
-        x={(x - 1) * 20}
-        y={(y - 1) * 20}
-        fill={color(shape)}
-      />
+      <g>
+        <rect
+          width="20"
+          height="20"
+          x={(x - 1) * 20 + 1}
+          y={(y - 1) * 20 + 1}
+          fill={color(shape)}
+          stroke="black"
+          stroke-width="1"
+        />
+        <rect
+          width="20"
+          height="8"
+          x={(x - 1) * 20 + 1}
+          y={(y - 1) * 20 + 1}
+          fill="url(#block-gradient)"
+          pointer-events="none"
+        />
+      </g>
     <% end %>
     """
   end
 
-  defp color(:l), do: "red"
-  defp color(:j), do: "royalblue"
-  defp color(:s), do: "limegreen"
-  defp color(:z), do: "yellow"
-  defp color(:o), do: "magenta"
-  defp color(:i), do: "silver"
-  defp color(:t), do: "saddlebrown"
-  defp color(_), do: "red"
+  defp color(:l), do: "#FF8000"
+  defp color(:j), do: "#0000F0"
+  defp color(:s), do: "#00F000"
+  defp color(:z), do: "#F00000"
+  defp color(:o), do: "#F0F000"
+  defp color(:i), do: "#00F0F0"
+  defp color(:t), do: "#A000F0"
+  defp color(_), do: "#888888"
 
   defp new_game(socket) do
     assign(socket, game: Game.new(), tick_rate: 200)
