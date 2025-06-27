@@ -64,7 +64,7 @@ defmodule Tetris.Game do
     rows = complete_rows(game)
     game
     |> absorb(rows)
-    |> score_rows(rows)
+    |> score_rows(rows, 10)
   end
 
   def absorb(game, []), do: game
@@ -85,13 +85,13 @@ defmodule Tetris.Game do
   defp maybe_move_y(y, row) when y < row, do: y + 1
   defp maybe_move_y(y, _row), do: y
 
-  def score_rows(game, rows) do
+  def score_rows(game, rows, multiplicator \\ 1) do
     old_score = game.score
     new_score =
       :math.pow(2, length(rows))
       |> round
 
-    %{game | score: new_score + old_score}
+    %{game | score: (new_score * multiplicator) + old_score}
   end
 
   defp complete_rows(game) do
