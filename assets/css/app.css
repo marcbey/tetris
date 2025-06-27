@@ -5,6 +5,14 @@
 
 /* This file is for your main application CSS */
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
 body {
   @apply bg-black;
   font-family: 'Press Start 2P', monospace;
