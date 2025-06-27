@@ -62,9 +62,10 @@ defmodule Tetris.Game do
 
   def collapse_rows(game) do
     rows = complete_rows(game)
+    multiplicator = Enum.count(rows) * 10
     game
     |> absorb(rows)
-    |> score_rows(rows, 10)
+    |> score_rows(rows, multiplicator)
   end
 
   def absorb(game, []), do: game
