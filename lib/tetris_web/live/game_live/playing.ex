@@ -69,23 +69,50 @@ defmodule TetrisWeb.GameLive.Playing do
   end
 
   def rotate(%{assigns: %{game: game}} = socket) do
-    assign(socket, game: Game.rotate(game))
+    socket
+    |> assign(game: Game.rotate(game))
+    |> push_event("tetris-rotate", %{})
   end
 
   def left(%{assigns: %{game: game}} = socket) do
-    assign(socket, game: Game.left(game))
+    socket
+    |> assign(game: Game.left(game))
+    |> push_event("tetris-move", %{})
   end
 
   def right(%{assigns: %{game: game}} = socket) do
-    assign(socket, game: Game.right(game))
+    socket
+    |> assign(game: Game.right(game))
+    |> push_event("tetris-move", %{})
   end
 
   def down(%{assigns: %{game: game}} = socket) do
-    assign(socket, game: Game.down(game))
+    old_game = game
+    new_game = Game.down(game)
+    
+    socket = assign(socket, game: new_game)
+    
+    # Check if piece merged (dropped)
+    socket = if old_game.tetro != new_game.tetro do
+      push_event(socket, "tetris-drop", %{})
+    else
+      socket
+    end
+    
+    # Check for line clears
+    socket = if new_game.lines_cleared > 0 do
+      push_event(socket, "tetris-line-clear", %{lines: new_game.lines_cleared})
+    else
+      socket
+    end
+    
+    socket
   end
 
   def maybe_end_game(%{assigns: %{game: %{game_over: true}}} = socket) do
-    socket |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}")
+    socket 
+    |> push_event("tetris-game-over", %{})
+    |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}")
   end
 
   def maybe_end_game(socket), do: socket

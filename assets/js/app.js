@@ -21,6 +21,10 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import TetrisAudio from "./tetris_audio"
+
+// Initialize Tetris Audio
+const tetrisAudio = new TetrisAudio()
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -33,6 +37,17 @@ topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
+// Tetris sound effect event listeners
+window.addEventListener("phx:tetris-move", _info => tetrisAudio.playMove())
+window.addEventListener("phx:tetris-rotate", _info => tetrisAudio.playRotate())
+window.addEventListener("phx:tetris-drop", _info => tetrisAudio.playDrop())
+window.addEventListener("phx:tetris-line-clear", (e) => {
+  const numLines = e.detail?.lines || 1
+  tetrisAudio.playLineClear(numLines)
+})
+window.addEventListener("phx:tetris-game-over", _info => tetrisAudio.playGameOver())
+window.addEventListener("phx:tetris-level-up", _info => tetrisAudio.playLevelUp())
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
@@ -41,4 +56,10 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+// expose tetrisAudio for debugging and manual control:
+// >> tetrisAudio.toggle()  // enable/disable sounds
+// >> tetrisAudio.setVolume(0.5)  // adjust volume
+// >> tetrisAudio.playLineClear(4)  // test sounds
+window.tetrisAudio = tetrisAudio
 

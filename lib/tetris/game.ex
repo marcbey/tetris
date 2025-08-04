@@ -1,5 +1,5 @@
 defmodule Tetris.Game do
-  defstruct [:tetro, points: [], score: 0, junkyard: %{}, game_over: false]
+  defstruct [:tetro, points: [], score: 0, junkyard: %{}, game_over: false, lines_cleared: 0]
   alias Tetris.{Tetromino, Points}
 
   def new do
@@ -36,7 +36,7 @@ defmodule Tetris.Game do
   end
 
   def move_down_or_merge(game, _old, new, true=_valid) do
-    %{game| tetro: new}
+    %{game| tetro: new, lines_cleared: 0}
     |> show
     |> inc_score(1)
   end
@@ -56,16 +56,20 @@ defmodule Tetris.Game do
       |> Enum.map(fn {x, y, shape} -> {{x, y}, shape} end)
       |> Enum.into(game.junkyard)
 
-    %{game| junkyard: new_junkyard}
+    {new_game, lines_cleared} = %{game| junkyard: new_junkyard}
       |> collapse_rows
+      
+    %{new_game | lines_cleared: lines_cleared}
   end
 
   def collapse_rows(game) do
     rows = complete_rows(game)
     multiplicator = Enum.count(rows) * 10
-    game
+    new_game = game
     |> absorb(rows)
     |> score_rows(rows, multiplicator)
+    
+    {new_game, length(rows)}
   end
 
   def absorb(game, []), do: game
