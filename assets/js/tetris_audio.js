@@ -80,14 +80,12 @@ class TetrisAudio {
   loadSIDFile() {
     try {
       if (this.sidPlayer) {
-        // Use the original source directly since local serving has issues
-        const sidUrl = 'https://jhohertz.github.io/jsSID/sid/real/Sanxion.sid';
-        // Local alternative (when Phoenix server is properly configured):
-        // const sidUrl = '/sounds/Sanxion.sid';
+        // Use local file from Phoenix static assets
+        const sidUrl = '/sounds/Sanxion.sid';
         
         this.sidPlayer.loadinit(sidUrl, 0); // subtune 0
         this.sidLoaded = true;
-        console.log('Sanxion.sid loading initiated from:', sidUrl);
+        console.log('Sanxion.sid loading initiated from local file:', sidUrl);
       }
     } catch (e) {
       console.warn('Error loading SID file:', e);
