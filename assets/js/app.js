@@ -21,6 +21,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import "../vendor/jsSID"
 import TetrisAudio from "./tetris_audio"
 
 // Initialize Tetris Audio
@@ -47,6 +48,8 @@ window.addEventListener("phx:tetris-line-clear", (e) => {
 })
 window.addEventListener("phx:tetris-game-over", _info => tetrisAudio.playGameOver())
 window.addEventListener("phx:tetris-level-up", _info => tetrisAudio.playLevelUp())
+window.addEventListener("phx:tetris-start-music", _info => tetrisAudio.startBackgroundMusic())
+window.addEventListener("phx:tetris-stop-music", _info => tetrisAudio.stopBackgroundMusic())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

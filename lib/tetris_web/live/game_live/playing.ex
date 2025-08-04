@@ -11,7 +11,15 @@ defmodule TetrisWeb.GameLive.Playing do
       Process.send_after(self(), :tick, @tick_rate)
     end
 
-    {:ok, new_game(socket)}
+    socket = new_game(socket)
+    
+    # Start background music when game starts
+    if connected?(socket) do
+      socket = push_event(socket, "tetris-start-music", %{})
+      {:ok, socket}
+    else
+      {:ok, socket}
+    end
   end
 
   defp render_board(assigns) do
@@ -111,6 +119,7 @@ defmodule TetrisWeb.GameLive.Playing do
 
   def maybe_end_game(%{assigns: %{game: %{game_over: true}}} = socket) do
     socket 
+    |> push_event("tetris-stop-music", %{})
     |> push_event("tetris-game-over", %{})
     |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}")
   end
