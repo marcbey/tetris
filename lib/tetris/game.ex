@@ -64,10 +64,10 @@ defmodule Tetris.Game do
 
   def collapse_rows(game) do
     rows = complete_rows(game)
-    multiplicator = Enum.count(rows) * 10
+    multiplier = Enum.count(rows) * 10
     new_game = game
     |> absorb(rows)
-    |> score_rows(rows, multiplicator)
+    |> score_rows(rows, multiplier)
     
     {new_game, length(rows)}
   end
@@ -90,13 +90,13 @@ defmodule Tetris.Game do
   defp maybe_move_y(y, row) when y < row, do: y + 1
   defp maybe_move_y(y, _row), do: y
 
-  def score_rows(game, rows, multiplicator \\ 1) do
+  def score_rows(game, rows, multiplier \\ 1) do
     old_score = game.score
     new_score =
       :math.pow(2, length(rows))
       |> round
 
-    %{game | score: (new_score * multiplicator) + old_score}
+    %{game | score: (new_score * multiplier) + old_score}
   end
 
   defp complete_rows(game) do
