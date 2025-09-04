@@ -12,7 +12,7 @@ defmodule TetrisWeb.GameLive.Playing do
     end
 
     socket = new_game(socket)
-    
+
     # Start background music when game starts
     if connected?(socket) do
       socket = push_event(socket, "tetris-start-music", %{})
@@ -27,12 +27,12 @@ defmodule TetrisWeb.GameLive.Playing do
     <svg width="204" height="404" style="background:#222; border:1px solid #444;">
       <defs>
         <linearGradient id="block-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fff" stop-opacity="0.5"/>
-          <stop offset="100%" stop-color="#000" stop-opacity="0.1"/>
+          <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.1" />
         </linearGradient>
       </defs>
       <rect width="200" height="400" x="1" y="1" fill="none" />
-      <%= render_points(assigns) %>
+      {render_points(assigns)}
     </svg>
     """
   end
@@ -97,28 +97,30 @@ defmodule TetrisWeb.GameLive.Playing do
   def down(%{assigns: %{game: game}} = socket) do
     old_game = game
     new_game = Game.down(game)
-    
+
     socket = assign(socket, game: new_game)
-    
+
     # Check if piece merged (dropped)
-    socket = if old_game.tetro != new_game.tetro do
-      push_event(socket, "tetris-drop", %{})
-    else
-      socket
-    end
-    
+    socket =
+      if old_game.tetro != new_game.tetro do
+        push_event(socket, "tetris-drop", %{})
+      else
+        socket
+      end
+
     # Check for line clears
-    socket = if new_game.lines_cleared > 0 do
-      push_event(socket, "tetris-line-clear", %{lines: new_game.lines_cleared})
-    else
-      socket
-    end
-    
+    socket =
+      if new_game.lines_cleared > 0 do
+        push_event(socket, "tetris-line-clear", %{lines: new_game.lines_cleared})
+      else
+        socket
+      end
+
     socket
   end
 
   def maybe_end_game(%{assigns: %{game: %{game_over: true}}} = socket) do
-    socket 
+    socket
     |> push_event("tetris-stop-music", %{})
     |> push_event("tetris-game-over", %{})
     |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}")
@@ -141,7 +143,7 @@ defmodule TetrisWeb.GameLive.Playing do
   end
 
   def handle_event("keydown", %{"key" => "ArrowLeft"}, socket) do
-    IO.inspect socket
+    IO.inspect(socket)
     {:noreply, socket |> left}
   end
 
