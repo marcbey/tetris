@@ -6,9 +6,11 @@
 - No containerization
 - No CI/CD pipeline
 - No Database
+- Enablee local development with Docker
 
-## Goals
-1. Enable local development with Docker
+## Immediate Goals
+1. Create Terraform resources for a Github CI/CD Pipeline
+2. Create a Gitlab pipeline to do `mix test` & `mix format`
 
 ## Next Goals
 1. Production deployment of containers
