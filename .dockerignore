@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Dependencies
+deps/
+_build/
+node_modules/
+assets/node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+cover/
+doc/
+tmp/
+
+# Static files (will be built in container)
+priv/static/
+
+# Environment files
+.env
+.env.local
+
+# Cache
+.elixir_ls/
+.claude/
