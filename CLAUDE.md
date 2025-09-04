@@ -26,6 +26,32 @@
 mix phx.server
 ```
 
+### Docker Development
+```bash
+# Build and start the application
+docker compose up --build
+
+# Start service (after first build)
+docker compose up
+
+# Start in detached mode
+docker compose up -d
+
+# Stop service
+docker compose down
+
+# View logs
+docker compose logs -f web
+
+# Execute commands in web container
+docker compose exec web mix test
+docker compose exec web mix format
+docker compose exec web iex -S mix
+
+# Rebuild after dependency changes
+docker compose build web
+```
+
 ### Testing
 ```bash
 mix test
@@ -51,18 +77,18 @@ mix compile
 mix setup
 ```
 
-### Database Operations
+<!-- ### Database Operations
 ```bash
 mix ecto.migrate    # Run pending migrations
 mix ecto.rollback   # Rollback last migration
 mix ecto.reset      # Drop, create, migrate, and seed database
-```
+``` -->
 
-### Assets
+<!-- ### Assets
 ```bash
 mix assets.build    # Build assets for development
 mix assets.deploy   # Build and minify assets for production
-```
+``` -->
 
 ## Project Structure
 
