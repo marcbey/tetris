@@ -1,0 +1,12 @@
+Compiling 4 files (.ex)
+    error: undefined function length/2 (there is no such import)
+    │
+ 39 │     validate length(:player_name, max: 15)
+    │              ^
+    │
+    └─ lib/tetris/high_scores/score_resource.ex:39:14: Tetris.HighScores.ScoreResource (module)
+
+
+== Compilation error in file lib/tetris/high_scores/score_resource.ex ==
+** (CompileError) lib/tetris/high_scores/score_resource.ex: cannot compile module Tetris.HighScores.ScoreResource (errors have been logged)
+    (ash 3.5.40) expanding macro: Ash.Resource.Dsl.Validations.Validate.validate/1

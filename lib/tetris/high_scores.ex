@@ -3,14 +3,14 @@ defmodule Tetris.HighScores do
   Context for managing high scores (Ash powered).
   """
 
-  alias Tetris.AshApi
+  alias Tetris.AshDomain
   alias Tetris.HighScores.ScoreResource
 
   @spec submit(String.t(), non_neg_integer()) :: {:ok, struct()} | {:error, term()}
   def submit(player_name, score) when is_binary(player_name) and is_integer(score) do
     name = sanitize_name(player_name)
 
-    Ash.create(ScoreResource, %{player_name: name, score: score}, api: AshApi, action: :submit)
+    Ash.create(ScoreResource, %{player_name: name, score: score}, domain: AshDomain, action: :submit)
   end
 
   @spec top(pos_integer()) :: [struct()]
@@ -19,7 +19,7 @@ defmodule Tetris.HighScores do
     |> Ash.Query.new()
     |> Ash.Query.sort(score: :desc, inserted_at: :asc)
     |> Ash.Query.limit(limit)
-    |> Ash.read!(api: AshApi)
+    |> Ash.read!(domain: AshDomain)
   end
 
   @doc """
