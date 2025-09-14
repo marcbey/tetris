@@ -1,5 +1,6 @@
 defmodule TetrisWeb.GameLive.GameOver do
   use TetrisWeb, :live_view
+  require Logger
   alias Tetris.HighScores
 
   def mount(params, _session, socket) do
@@ -7,7 +8,10 @@ defmodule TetrisWeb.GameLive.GameOver do
     player_name = default_name(params["player"]) # supports future name passing
 
     if score > 0 do
-      _ = HighScores.submit(player_name, score)
+      case HighScores.submit(player_name, score) do
+        {:ok, _} -> :ok
+        {:error, reason} -> Logger.error("Failed to save score: #{inspect(reason)}")
+      end
     end
 
     top_scores = HighScores.top(10)

@@ -19,6 +19,7 @@ defmodule Tetris.HighScores.ScoreResource do
       primary_key? true
       allow_nil? false
       writable? false
+      generated? true
     end
 
     attribute :player_name, :string do
