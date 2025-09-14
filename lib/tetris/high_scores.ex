@@ -1,25 +1,25 @@
 defmodule Tetris.HighScores do
   @moduledoc """
-  Context for managing high scores.
+  Context for managing high scores (Ash powered).
   """
 
-  import Ecto.Query, warn: false
-  alias Tetris.Repo
-  alias Tetris.HighScores.Score
+  alias Tetris.AshApi
+  alias Tetris.HighScores.ScoreResource
 
-  @spec submit(String.t(), non_neg_integer()) :: {:ok, Score.t()} | {:error, Ecto.Changeset.t()}
+  @spec submit(String.t(), non_neg_integer()) :: {:ok, struct()} | {:error, term()}
   def submit(player_name, score) when is_binary(player_name) and is_integer(score) do
     name = sanitize_name(player_name)
 
-    %Score{}
-    |> Score.changeset(%{player_name: name, score: score})
-    |> Repo.insert()
+    Ash.create(ScoreResource, %{player_name: name, score: score}, api: AshApi, action: :submit)
   end
 
-  @spec top(pos_integer()) :: [Score.t()]
+  @spec top(pos_integer()) :: [struct()]
   def top(limit \\ 10) when is_integer(limit) and limit > 0 do
-    from(s in Score, order_by: [desc: s.score, asc: s.inserted_at], limit: ^limit)
-    |> Repo.all()
+    ScoreResource
+    |> Ash.Query.new()
+    |> Ash.Query.sort(score: :desc, inserted_at: :asc)
+    |> Ash.Query.limit(limit)
+    |> Ash.read!(api: AshApi)
   end
 
   @doc """
