@@ -60,6 +60,16 @@ body {
   box-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14;
 }
 
+/* Input with hover effect similar to pixel buttons */
+.pixel-input {
+  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+.pixel-input:hover {
+  transform: scale(1.03) rotate(-1deg);
+  box-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14;
+}
+
 .animated-gradient-border {
   padding: 4px; /* Adjust for border thickness */
   border-radius: 1rem;

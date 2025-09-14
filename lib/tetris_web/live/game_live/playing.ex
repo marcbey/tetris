@@ -6,12 +6,14 @@ defmodule TetrisWeb.GameLive.Playing do
   @tick_rate 200
   @tick_rate_fast 20
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     if connected?(socket) do
       Process.send_after(self(), :tick, @tick_rate)
     end
 
+    player_name = params["player"]
     socket = new_game(socket)
+    socket = assign(socket, player_name: player_name)
 
     # Start background music when game starts
     if connected?(socket) do
@@ -123,7 +125,7 @@ defmodule TetrisWeb.GameLive.Playing do
     socket
     |> push_event("tetris-stop-music", %{})
     |> push_event("tetris-game-over", %{})
-    |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}")
+    |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}&player=#{URI.encode(socket.assigns.player_name || "")}")
   end
 
   def maybe_end_game(socket), do: socket
@@ -143,7 +145,6 @@ defmodule TetrisWeb.GameLive.Playing do
   end
 
   def handle_event("keydown", %{"key" => "ArrowLeft"}, socket) do
-    IO.inspect(socket)
     {:noreply, socket |> left}
   end
 

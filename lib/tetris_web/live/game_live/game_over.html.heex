@@ -8,12 +8,34 @@
         Game Over
       </h1>
       <h2
-        class="text-xl sm:text-2xl md:text-3xl neon-text mb-8 text-center leading-tight break-words"
+        class="text-xl sm:text-2xl md:text-3xl neon-text mb-6 text-center leading-tight break-words"
         style="font-family: 'Press Start 2P', monospace;"
       >
         Your score is {@score}
       </h2>
-      <button phx-click="play" class="pixel-btn w-full max-w-xs text-xs sm:text-base">
+
+      <div class="w-full">
+        <h3 class="text-lg neon-green mb-2 text-center" style="font-family: 'Press Start 2P', monospace;">High Scores</h3>
+        <div class="w-full bg-zinc-900/60 border border-zinc-700 rounded p-3">
+          <div class="grid grid-cols-6 text-zinc-300 text-xs mb-2">
+            <div class="col-span-1">#</div>
+            <div class="col-span-3">Player</div>
+            <div class="col-span-2 text-right">Score</div>
+          </div>
+          <%= for {entry, idx} <- Enum.with_index(@top_scores, 1) do %>
+            <div class="grid grid-cols-6 text-white text-sm py-1">
+              <div class="col-span-1"><%= idx %></div>
+              <div class="col-span-3 truncate"><%= entry.player_name %></div>
+              <div class="col-span-2 text-right"><%= entry.score %></div>
+            </div>
+          <% end %>
+          <%= if @top_scores == [] do %>
+            <p class="text-zinc-400 text-sm">No scores yet.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <button phx-click="play" class="pixel-btn w-full max-w-xs text-xs sm:text-base mt-6">
         Play again?
       </button>
     </div>
