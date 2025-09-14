@@ -1,6 +1,8 @@
 defmodule TetrisWeb.GameLive.Playing do
   use TetrisWeb, :live_view
+  require Logger
   alias Tetris.Game
+  alias Tetris.HighScores
 
   @rotate_keys ["ArrowUp", " "]
   @tick_rate 200
@@ -13,7 +15,7 @@ defmodule TetrisWeb.GameLive.Playing do
 
     player_name = session["player_name"]
     socket = new_game(socket)
-    socket = assign(socket, player_name: player_name)
+    socket = assign(socket, player_name: player_name, score_saved: false)
 
     # Start background music when game starts
     if connected?(socket) do
@@ -122,19 +124,38 @@ defmodule TetrisWeb.GameLive.Playing do
   end
 
   def maybe_end_game(%{assigns: %{game: %{game_over: true}}} = socket) do
-    socket
-    |> push_event("tetris-stop-music", %{})
-    |> push_event("tetris-game-over", %{})
-    |> push_event("tetris-save-score", %{score: socket.assigns.game.score})
-    |> push_navigate(to: "/game/over")
+    socket =
+      socket
+      |> push_event("tetris-stop-music", %{})
+      |> push_event("tetris-game-over", %{})
+
+    if socket.assigns.score_saved do
+      socket
+    else
+      score = socket.assigns.game.score
+      name = socket.assigns.player_name || "Anonymous"
+
+      case HighScores.submit(name, score) do
+        {:ok, _} -> :ok
+        {:error, reason} -> Logger.error("Failed to persist score: #{inspect(reason)}")
+      end
+
+      socket
+      |> push_event("tetris-save-score", %{score: score})
+      |> assign(score_saved: true)
+    end
   end
 
   def maybe_end_game(socket), do: socket
 
   def handle_info(:tick, socket) do
     socket = socket |> down |> maybe_end_game
-    Process.send_after(self(), :tick, socket.assigns.tick_rate)
-    {:noreply, socket}
+    if socket.assigns.game.game_over do
+      {:noreply, socket}
+    else
+      Process.send_after(self(), :tick, socket.assigns.tick_rate)
+      {:noreply, socket}
+    end
   end
 
   def handle_event("keydown", %{"key" => key}, socket) when key in @rotate_keys do

@@ -61,6 +61,8 @@ window.addEventListener("phx:tetris-save-score", async (e) => {
       },
       body: JSON.stringify({score: e.detail?.score || 0})
     })
+    // After the server responds and the cookie is set, navigate
+    window.location.href = '/game/over'
   } catch (err) {
     console.warn('Failed to save score to session', err)
   }
