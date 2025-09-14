@@ -17,7 +17,13 @@ defmodule TetrisWeb.GameLive.Welcome do
   end
 
   def handle_event("play", %{"player" => %{"player_name" => player_name}}, socket) do
-    name = String.trim(player_name || "")
+    name =
+      player_name
+      |> Kernel.||("")
+      |> String.trim()
+      |> String.replace(~r/\s+/u, " ")
+      |> String.replace(~r/[^A-Za-z0-9 _\.\-]/u, "")
+      |> String.slice(0, 15)
 
     if name == "" do
       {:noreply, put_flash(socket, :error, "Please enter your name to continue")}
