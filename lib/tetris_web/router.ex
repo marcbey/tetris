@@ -23,6 +23,8 @@ defmodule TetrisWeb.Router do
     live "/scores", HighScoresLive.Index, :index
 
     get "/", PageController, :home
+    post "/session/player", SessionController, :save_player
+    post "/session/score", SessionController, :save_score
   end
 
   # Other scopes may use custom stacks.

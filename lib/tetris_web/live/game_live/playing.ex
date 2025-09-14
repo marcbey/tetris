@@ -6,12 +6,12 @@ defmodule TetrisWeb.GameLive.Playing do
   @tick_rate 200
   @tick_rate_fast 20
 
-  def mount(params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket) do
       Process.send_after(self(), :tick, @tick_rate)
     end
 
-    player_name = params["player"]
+    player_name = session["player_name"]
     socket = new_game(socket)
     socket = assign(socket, player_name: player_name)
 
@@ -125,7 +125,8 @@ defmodule TetrisWeb.GameLive.Playing do
     socket
     |> push_event("tetris-stop-music", %{})
     |> push_event("tetris-game-over", %{})
-    |> push_navigate(to: "/game/over?score=#{socket.assigns.game.score}&player=#{URI.encode(socket.assigns.player_name || "")}")
+    |> push_event("tetris-save-score", %{score: socket.assigns.game.score})
+    |> push_navigate(to: "/game/over")
   end
 
   def maybe_end_game(socket), do: socket

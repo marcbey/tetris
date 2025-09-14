@@ -3,9 +3,9 @@ defmodule TetrisWeb.GameLive.GameOver do
   require Logger
   alias Tetris.HighScores
 
-  def mount(params, _session, socket) do
-    score = parse_score(params["score"]) || 0
-    player_name = default_name(params["player"]) # supports future name passing
+  def mount(_params, session, socket) do
+    score = (session["last_score"] || 0)
+    player_name = default_name(session["player_name"]) # supports future name passing
 
     if score > 0 do
       case HighScores.submit(player_name, score) do
@@ -21,15 +21,6 @@ defmodule TetrisWeb.GameLive.GameOver do
 
   def handle_event("play", _, socket) do
     {:noreply, push_navigate(socket, to: "/game/playing")}
-  end
-
-  defp parse_score(nil), do: nil
-  defp parse_score(<<>>), do: nil
-  defp parse_score(val) when is_binary(val) do
-    case Integer.parse(val) do
-      {int, _} -> int
-      :error -> 0
-    end
   end
 
   defp default_name(nil), do: "Anonymous"

@@ -12,23 +12,8 @@ defmodule TetrisWeb.GameLive.Welcome do
      )}
   end
 
+  # Form submission now handled by controller; keep validate for client-side echo if needed
   def handle_event("validate", %{"player" => player_params}, socket) do
     {:noreply, assign(socket, form: to_form(player_params, as: :player))}
-  end
-
-  def handle_event("play", %{"player" => %{"player_name" => player_name}}, socket) do
-    name =
-      player_name
-      |> Kernel.||("")
-      |> String.trim()
-      |> String.replace(~r/\s+/u, " ")
-      |> String.replace(~r/[^A-Za-z0-9 _\.\-]/u, "")
-      |> String.slice(0, 15)
-
-    if name == "" do
-      {:noreply, put_flash(socket, :error, "Please enter your name to continue")}
-    else
-      {:noreply, push_navigate(socket, to: "/game/playing?player=#{URI.encode(name)}")}
-    end
   end
 end

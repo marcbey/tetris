@@ -50,6 +50,21 @@ window.addEventListener("phx:tetris-game-over", _info => tetrisAudio.playGameOve
 window.addEventListener("phx:tetris-level-up", _info => tetrisAudio.playLevelUp())
 window.addEventListener("phx:tetris-start-music", _info => tetrisAudio.startBackgroundMusic())
 window.addEventListener("phx:tetris-stop-music", _info => tetrisAudio.stopBackgroundMusic())
+window.addEventListener("phx:tetris-save-score", async (e) => {
+  try {
+    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute("content")
+    await fetch('/session/score', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-csrf-token': csrf || ''
+      },
+      body: JSON.stringify({score: e.detail?.score || 0})
+    })
+  } catch (err) {
+    console.warn('Failed to save score to session', err)
+  }
+})
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
@@ -65,4 +80,3 @@ window.liveSocket = liveSocket
 // >> tetrisAudio.setVolume(0.5)  // adjust volume
 // >> tetrisAudio.playLineClear(4)  // test sounds
 window.tetrisAudio = tetrisAudio
-
