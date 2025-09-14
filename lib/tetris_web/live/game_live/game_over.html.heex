@@ -15,7 +15,7 @@
       </h2>
 
       <div class="w-full">
-        <h3 class="text-lg neon-green mb-2 text-center" style="font-family: 'Press Start 2P', monospace;">High Scores</h3>
+        <h3 class="text-2xl sm:text-3xl neon-pink mb-3 text-center" style="font-family: 'Press Start 2P', monospace;">★ High Scores ★</h3>
         <div class="w-full bg-zinc-900/60 border border-zinc-700 rounded p-3">
           <div class="grid grid-cols-6 text-zinc-300 text-xs mb-2">
             <div class="col-span-1">#</div>
@@ -23,8 +23,20 @@
             <div class="col-span-2 text-right">Score</div>
           </div>
           <%= for {entry, idx} <- Enum.with_index(@top_scores, 1) do %>
-            <div class="grid grid-cols-6 text-white text-sm py-1">
-              <div class="col-span-1"><%= idx %></div>
+            <% rank_classes = case idx do
+              1 -> "text-yellow-300 border-yellow-400 bg-yellow-500/10 font-extrabold text-base sm:text-lg"
+              2 -> "text-zinc-200 border-zinc-400 bg-zinc-400/10 font-bold text-base"
+              3 -> "text-amber-300 border-amber-500 bg-amber-500/10 font-bold text-base"
+              _ -> "text-white"
+            end %>
+            <% trophy = case idx do
+              1 -> "🏆"
+              2 -> "🥈"
+              3 -> "🥉"
+              _ -> ""
+            end %>
+            <div class={"grid grid-cols-6 py-1 items-center #{rank_classes} #{if idx <= 3, do: "rounded border px-2 my-1", else: ""}">
+              <div class="col-span-1 flex items-center gap-1"><%= idx %> <%= trophy %></div>
               <div class="col-span-3 truncate"><%= entry.player_name %></div>
               <div class="col-span-2 text-right"><%= entry.score %></div>
             </div>
