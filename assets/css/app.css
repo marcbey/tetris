@@ -47,6 +47,16 @@ body {
     0 0 80px #f0a;
 }
 
+.neon-cyan {
+  color: #00e5ff;
+  text-shadow:
+    0 0 5px #00e5ff,
+    0 0 10px #00e5ff,
+    0 0 20px #00e5ff,
+    0 0 40px #0ff,
+    0 0 80px #0ff;
+}
+
 .pixel-btn {
   @apply bg-pink-500 border-4 border-yellow-300 rounded px-4 py-2 mt-4 shadow-lg;
   font-family: 'Press Start 2P', monospace;
